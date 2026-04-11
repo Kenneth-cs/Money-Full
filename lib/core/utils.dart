@@ -5,14 +5,12 @@ class AppUtils {
   // 货币格式化：¥ 12,840.00
   static String formatCurrency(double amount) {
     final formatter = NumberFormat('#,##0.00', 'zh_CN');
-    return '¥ ${formatter.format(amount)}';
+    return '¥ ${formatter.format(amount)}'; // 依然保留了¥，但是在DashboardScreen调用时如果数字大也可以直接用这个
   }
 
   // 简短货币格式：¥ 12k
   static String formatCurrencyShort(double amount) {
-    if (amount >= 10000) {
-      return '¥ ${(amount / 10000).toStringAsFixed(1)}万';
-    } else if (amount >= 1000) {
+    if (amount >= 1000) {
       return '¥ ${(amount / 1000).toStringAsFixed(0)}k';
     }
     return '¥ ${amount.toStringAsFixed(0)}';

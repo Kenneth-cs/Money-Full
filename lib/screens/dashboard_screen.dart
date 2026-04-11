@@ -45,11 +45,12 @@ class DashboardScreen extends ConsumerWidget {
               actionLabel: '查看全部',
               onAction: () => ref.read(activeTabProvider.notifier).state = 1,
             ),
-            const SizedBox(height: 12),
+                const SizedBox(height: 12),
             SizedBox(
-              height: 180,
+              height: 160,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()), // 让滑动更丝滑
                 itemCount: activeProjects.length,
                 separatorBuilder: (_, __) => const SizedBox(width: 12),
                 itemBuilder: (context, i) => _ProjectCardHorizontal(
@@ -97,96 +98,81 @@ class _FinanceSummaryCard extends StatelessWidget {
           colors: [AppColors.primaryGreen, AppColors.lightGreen],
         ),
         borderRadius: BorderRadius.circular(32),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primaryGreen.withOpacity(0.4),
-            blurRadius: 30,
-            offset: const Offset(0, 15),
-          ),
-        ],
       ),
-      padding: const EdgeInsets.all(28),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28), // 左右边距稍微收一点，让大字体不拥挤
       child: Stack(
+        clipBehavior: Clip.none,
         children: [
-          // 装饰圆
-          Positioned(
-            top: -20,
-            right: -20,
-            child: Container(
-              width: 120,
-              height: 120,
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.15),
-                shape: BoxShape.circle,
-              ),
-            ),
-          ),
-
           // 卡皮吉祥物 + 对话气泡
           Positioned(
-            top: 0,
-            right: 0,
+            top: -16, // 往上移动，避免与底部储蓄卡片重叠
+            right: 0, // 靠右
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
+                // 气泡框 (黄色框位置，左右拉长)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+                  width: 166, // 左右拉长
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.85),
                     borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(12),
-                      topRight: Radius.circular(4),
-                      bottomLeft: Radius.circular(12),
-                      bottomRight: Radius.circular(12),
+                      topLeft: Radius.circular(14),
+                      topRight: Radius.circular(14),
+                      bottomLeft: Radius.circular(14),
+                      bottomRight: Radius.circular(4), // 小尾巴在右下
                     ),
                     boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 8)],
                   ),
                   child: const Text(
-                    '早安，今天也是\n平静的一天呢~',
+                    '早安，今天也是平静的一天呢~', // 去掉换行，单行显示
                     style: TextStyle(
                       color: AppColors.darkGreen,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                      height: 1.4,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w800,
                     ),
-                    textAlign: TextAlign.right,
+                    textAlign: TextAlign.center,
                   ),
                 ),
-                const SizedBox(height: 4),
-                const CapyMascot(),
+                const SizedBox(height: 6), // 气泡和卡皮之间的距离
+                // 卡皮 (红框位置)
+                const Padding(
+                  padding: EdgeInsets.only(right: 16.0), // 让卡皮稍往左移一点，对齐气泡的小尾巴
+                  child: CapyMascot(),
+                ),
               ],
             ),
           ),
 
           // 数据区域（左侧）
           SizedBox(
-            width: MediaQuery.of(context).size.width * 0.5,
+            width: double.infinity,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
                   '当前支出',
                   style: TextStyle(
-                    color: Color(0xFF2C6957),
+                    color: AppColors.darkGreen,
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 4),
                 Text(
                   AppUtils.formatCurrency(expense),
                   style: const TextStyle(
-                    color: AppColors.darkGreen,
-                    fontSize: 30,
+                    color: AppColors.darkGreen, // 参考图2修改了数字颜色
+                    fontSize: 36, // 字体再调大点匹配图2
                     fontWeight: FontWeight.w900,
                     letterSpacing: -1,
                   ),
                 ),
-                const SizedBox(height: 140),
+                const SizedBox(height: 28), // 微调间距以适合大字体
                 Row(
                   children: [
                     _MiniCard(label: '收入', value: income),
-                    const SizedBox(width: 10),
+                    const SizedBox(width: 12),
                     _MiniCard(label: '储蓄', value: saving),
                   ],
                 ),
@@ -209,19 +195,19 @@ class _MiniCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.35),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(14),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(label, style: const TextStyle(color: Color(0xFF2C6957), fontSize: 11, fontWeight: FontWeight.w700)),
-            const SizedBox(height: 2),
+            Text(label, style: const TextStyle(color: AppColors.darkGreen, fontSize: 12, fontWeight: FontWeight.w600)),
+            const SizedBox(height: 4),
             Text(
-              AppUtils.formatCurrencyShort(value),
-              style: const TextStyle(color: AppColors.darkGreen, fontSize: 16, fontWeight: FontWeight.w800),
+              AppUtils.formatCurrencyShort(value), // 已经带有¥前缀
+              style: const TextStyle(color: AppColors.darkGreen, fontSize: 18, fontWeight: FontWeight.w800), // 参考图2修改颜色和大小
             ),
           ],
         ),
@@ -253,13 +239,13 @@ class _ProjectCardHorizontal extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 220,
+        width: 180, // 调整为更宽以符合图1
         decoration: BoxDecoration(
           color: AppColors.cardWhite,
           borderRadius: BorderRadius.circular(24),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 12, offset: const Offset(0, 4))],
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 12, offset: const Offset(0, 4))],
         ),
-        padding: const EdgeInsets.all(18),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -267,37 +253,37 @@ class _ProjectCardHorizontal extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  width: 44,
-                  height: 44,
+                  width: 36,
+                  height: 36,
                   decoration: BoxDecoration(
                     color: AppColors.primaryGreen.withOpacity(0.2),
                     shape: BoxShape.circle,
                   ),
-                  child: Center(child: Text(project.emoji, style: const TextStyle(fontSize: 22))),
+                  child: Center(child: Text(project.emoji, style: const TextStyle(fontSize: 18))),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(
-                    color: AppColors.peach,
-                    borderRadius: BorderRadius.circular(20),
+                    color: const Color(0xFFFCE1D1), // 类似图1的蜜桃橙底色
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Text('进行中', style: TextStyle(color: Color(0xFF795841), fontSize: 10, fontWeight: FontWeight.w700)),
+                  child: const Text('进行中', style: TextStyle(color: Color(0xFFC78D63), fontSize: 9, fontWeight: FontWeight.w700)),
                 ),
               ],
             ),
             const Spacer(),
             Text(
               project.name,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppColors.textPrimary),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900, color: AppColors.textPrimary), // 加粗加黑
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 8),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween, // 保持左右对齐，更符合卡片布局
               children: [
-                Text('已用 ${AppUtils.formatCurrencyShort(project.spent)}', style: const TextStyle(fontSize: 11, color: AppColors.textHint)),
-                Text('预算 ${AppUtils.formatCurrencyShort(project.budget)}', style: const TextStyle(fontSize: 11, color: AppColors.textHint)),
+                Text('已用 ${AppUtils.formatCurrencyShort(project.spent)}', style: const TextStyle(fontSize: 10, color: AppColors.textHint, fontWeight: FontWeight.w500)),
+                Text('预算 ${AppUtils.formatCurrencyShort(project.budget)}', style: const TextStyle(fontSize: 10, color: AppColors.textHint, fontWeight: FontWeight.w500)),
               ],
             ),
             const SizedBox(height: 8),
@@ -307,7 +293,7 @@ class _ProjectCardHorizontal extends StatelessWidget {
                 value: project.progressPercent,
                 backgroundColor: AppColors.surfaceGray,
                 valueColor: AlwaysStoppedAnimation<Color>(_progressColor),
-                minHeight: 6,
+                minHeight: 6, // 调整进度条高度
               ),
             ),
           ],
@@ -359,14 +345,14 @@ class _TransactionItem extends ConsumerWidget {
               ],
             ),
           ),
-          Text(
-            '${transaction.isExpense ? "- " : "+ "}${AppUtils.formatCurrency(transaction.amount)}',
-            style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w800,
-              color: transaction.isExpense ? AppColors.expense : AppColors.income,
-            ),
-          ),
+                Text(
+                  '${transaction.isExpense ? "- " : "+ "}${AppUtils.formatCurrency(transaction.amount)}',
+                  style: TextStyle(
+                    fontSize: 16, // 加大一点以匹配图2底部交易记录数字的重量感
+                    fontWeight: FontWeight.w900, // 加黑
+                    color: transaction.isExpense ? AppColors.expense : AppColors.income,
+                  ),
+                ),
         ],
       ),
     );
@@ -386,7 +372,7 @@ class _SectionHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: AppColors.textPrimary)),
+        Text(title, style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w900, color: AppColors.textPrimary)), // 加黑加粗
         if (actionLabel != null)
           GestureDetector(
             onTap: onAction,

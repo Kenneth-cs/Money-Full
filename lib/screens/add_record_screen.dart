@@ -210,29 +210,55 @@ class _AddRecordScreenState extends ConsumerState<AddRecordScreen> {
 
                   // 归属项目选择
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                     decoration: BoxDecoration(
                       color: AppColors.surfaceGray,
-                      borderRadius: BorderRadius.circular(30),
+                      borderRadius: BorderRadius.circular(24),
                     ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        value: _selectedProjectId,
-                        isExpanded: true,
-                        icon: const Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.textHint),
-                        hint: const Text('选择归属项目'),
-                        items: activeProjects.map((p) => DropdownMenuItem(
-                          value: p.id,
-                          child: Row(
-                            children: [
-                              Text(p.emoji, style: const TextStyle(fontSize: 20)),
-                              const SizedBox(width: 10),
-                              Text(p.name, style: const TextStyle(fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
-                            ],
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.5),
+                            shape: BoxShape.circle,
                           ),
-                        )).toList(),
-                        onChanged: (v) => setState(() => _selectedProjectId = v),
-                      ),
+                          child: const Icon(Icons.home_outlined, size: 20, color: AppColors.textSecondary),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              value: _selectedProjectId,
+                              isExpanded: true,
+                              icon: const Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.textHint),
+                              hint: const Text('选择归属项目'),
+                              selectedItemBuilder: (context) {
+                                return activeProjects.map((p) => Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text('归属项目', style: TextStyle(fontSize: 11, color: AppColors.textHint, fontWeight: FontWeight.w600)),
+                                    const SizedBox(height: 2),
+                                    Text('${p.name} ${p.emoji}', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: AppColors.textPrimary)),
+                                  ],
+                                )).toList();
+                              },
+                              items: activeProjects.map((p) => DropdownMenuItem(
+                                value: p.id,
+                                child: Row(
+                                  children: [
+                                    Text(p.emoji, style: const TextStyle(fontSize: 20)),
+                                    const SizedBox(width: 10),
+                                    Text(p.name, style: const TextStyle(fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+                                  ],
+                                ),
+                              )).toList(),
+                              onChanged: (v) => setState(() => _selectedProjectId = v),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -320,14 +346,14 @@ class _CategoryItem extends StatelessWidget {
           width: 56,
           height: 56,
           decoration: BoxDecoration(
-            color: isSelected ? category.color : category.color.withOpacity(0.4),
+            color: category.color,
             shape: BoxShape.circle,
-            boxShadow: isSelected ? [BoxShadow(color: category.color.withOpacity(0.4), blurRadius: 12)] : [],
+            border: isSelected ? Border.all(color: AppColors.textPrimary, width: 2) : null,
           ),
-          child: Icon(category.icon, size: 26, color: Colors.white),
+          child: Icon(category.icon, size: 26, color: AppColors.textSecondary),
         ),
-        const SizedBox(height: 4),
-        Text(category.name, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textSecondary)),
+        const SizedBox(height: 6),
+        Text(category.name, style: TextStyle(fontSize: 11, fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600, color: isSelected ? AppColors.textPrimary : AppColors.textSecondary)),
       ],
     );
   }

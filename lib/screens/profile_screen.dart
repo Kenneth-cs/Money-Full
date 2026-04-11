@@ -13,7 +13,7 @@ class ProfileScreen extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(20, 56, 20, 24),
         child: Column(
           children: [
-            const AppHeader(title: '个人中心'),
+            const AppHeader(title: '个人中心', showBell: true),
 
             // 用户信息
             Column(
@@ -50,9 +50,9 @@ class ProfileScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 14),
-                const Text('钱小满用户', style: TextStyle(fontSize: 26, fontWeight: FontWeight.w900, color: AppColors.textPrimary)),
+                const Text('Julian Thorne', style: TextStyle(fontSize: 26, fontWeight: FontWeight.w900, color: AppColors.textPrimary)),
                 const SizedBox(height: 4),
-                const Text('佛系财务管理达人', style: TextStyle(fontSize: 14, color: AppColors.textHint)),
+                const Text('高级财务分析师', style: TextStyle(fontSize: 14, color: AppColors.textHint, fontWeight: FontWeight.w600)),
               ],
             ),
             const SizedBox(height: 28),
@@ -60,9 +60,9 @@ class ProfileScreen extends StatelessWidget {
             // 统计卡片
             Row(
               children: const [
-                _StatCard(emoji: '📁', count: 12, label: '活跃项目', color: AppColors.primaryGreen, textColor: AppColors.darkGreen),
+                _StatCard(icon: Icons.create_new_folder_outlined, count: 12, label: '活跃项目', color: AppColors.primaryGreen, textColor: AppColors.darkGreen),
                 SizedBox(width: 14),
-                _StatCard(emoji: '📋', count: 48, label: '总账目', color: AppColors.yellowGreen, textColor: Color(0xFF5F621F)),
+                _StatCard(icon: Icons.book_outlined, count: 48, label: '总账目', color: AppColors.yellowGreen, textColor: Color(0xFF5F621F)),
               ],
             ),
             const SizedBox(height: 28),
@@ -117,30 +117,30 @@ class ProfileScreen extends StatelessWidget {
 }
 
 class _StatCard extends StatelessWidget {
-  final String emoji;
+  final IconData icon;
   final int count;
   final String label;
   final Color color;
   final Color textColor;
 
-  const _StatCard({required this.emoji, required this.count, required this.label, required this.color, required this.textColor});
+  const _StatCard({required this.icon, required this.count, required this.label, required this.color, required this.textColor});
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 22, horizontal: 16),
+        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
         decoration: BoxDecoration(
           color: color.withOpacity(0.2),
           borderRadius: BorderRadius.circular(24),
         ),
         child: Column(
           children: [
-            Text(emoji, style: const TextStyle(fontSize: 28)),
-            const SizedBox(height: 8),
-            Text('$count', style: TextStyle(fontSize: 30, fontWeight: FontWeight.w900, color: textColor)),
+            Icon(icon, size: 24, color: textColor),
+            const SizedBox(height: 12),
+            Text('$count', style: TextStyle(fontSize: 32, fontWeight: FontWeight.w900, color: textColor)),
             const SizedBox(height: 4),
-            Text(label, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: textColor.withOpacity(0.8))),
+            Text(label, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: textColor.withOpacity(0.8))),
           ],
         ),
       ),

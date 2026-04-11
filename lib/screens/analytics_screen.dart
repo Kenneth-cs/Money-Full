@@ -17,8 +17,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
   final List<_PieItem> _pieData = const [
     _PieItem('软件开发', 42, AppColors.primaryGreen),
     _PieItem('市场营销', 42, AppColors.peach),
-    _PieItem('办公租赁', 8, AppColors.yellowGreen),
-    _PieItem('其他杂项', 8, Color(0xFFC9CB7D)),
+    _PieItem('办公租赁', 10, Color(0xFFD4DB86)),
+    _PieItem('其他杂项', 6, Color(0xFFF2F2F2)),
   ];
 
   final List<double> _lineValues = const [30, 35, 45, 55, 65, 70];
@@ -32,7 +32,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         padding: const EdgeInsets.fromLTRB(20, 56, 20, 24),
         child: Column(
           children: [
-            const AppHeader(title: '财务统计'),
+            const AppHeader(title: '财务统计', showBell: true, showUser: false),
 
             // 日期选择器
             Column(
@@ -107,18 +107,18 @@ class _DonutChartCard extends StatelessWidget {
                       color: item.color,
                       value: item.value.toDouble(),
                       title: '',
-                      radius: 50,
+                      radius: 35, // 增加圆环厚度
                     )).toList(),
-                    centerSpaceRadius: 70,
+                    centerSpaceRadius: 65, // 减小内圆半径以匹配图4
                     sectionsSpace: 3,
                   ),
                 ),
                 const Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('¥12,840', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: AppColors.textPrimary)),
-                    SizedBox(height: 4),
-                    Text('总支出', style: TextStyle(fontSize: 12, color: AppColors.textHint, fontWeight: FontWeight.w700)),
+                    Text('¥12,840', style: TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: AppColors.textPrimary, letterSpacing: -0.5)),
+                    SizedBox(height: 2),
+                    Text('总支出', style: TextStyle(fontSize: 11, color: AppColors.textSecondary, fontWeight: FontWeight.w600)),
                   ],
                 ),
               ],
@@ -126,13 +126,13 @@ class _DonutChartCard extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           ...pieData.map((item) => Padding(
-            padding: const EdgeInsets.only(bottom: 10),
+            padding: const EdgeInsets.only(bottom: 12),
             child: Row(
               children: [
                 Container(width: 12, height: 12, decoration: BoxDecoration(color: item.color, shape: BoxShape.circle)),
                 const SizedBox(width: 10),
-                Expanded(child: Text(item.name, style: const TextStyle(fontSize: 14, color: AppColors.textSecondary))),
-                Text('${item.value}%', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+                Expanded(child: Text(item.name, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppColors.textSecondary))),
+                Text('${item.value}%', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.textPrimary)),
               ],
             ),
           )),
